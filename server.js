@@ -2,6 +2,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const cors = require('cors'); 
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const path = require('path');
 
@@ -20,6 +21,13 @@ if (!GEMINI_API_KEY) {
 }
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+// Configure CORS to allow requests from your Netlify frontend domain
+const corsOptions = {
+    origin: 'https://heartsunveiled.netlify.app/', // REPLACE WITH YOUR ACTUAL NETLIFY URL
+    optionsSuccessStatus: 200 // For legacy browser support
+};
+app.use(cors(corsOptions)); // Add this line
 
 // Middleware to parse JSON bodies
 app.use(express.json());
