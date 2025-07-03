@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hearts Unveiled - Gen Z Edition: Deeper connections, no cap.">
+    <title>Hearts Unveiled - Gen Z Edition</title>
+    <!-- Essential for cache control on some browsers/servers, though hard refresh is often needed first. -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 20px; /* Add padding for smaller screens */
+            overflow-x: hidden;
+        }
+
+        /* Game Container */
+        .game-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            /* Add padding-bottom to ensure space for fixed menu button if it overlaps content */
+            padding-bottom: 100px; /* Adjust based on fixed menu button height + margin */
+        }
+
+        .game-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: rotate 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Headings */
+        h1 {
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-bottom: 5px;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1em;
+            margin-bottom: 25px;
+            opacity: 0.8;
+            font-weight: 300;
+            color: #ff006e;
+        }
+
+        /* Level Grid */
+        .level-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        /* Level Buttons */
+        .level-btn {
+            padding: 20px 15px;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.2); /* Default grayed out */
+            color: rgba(255, 255, 255, 0.7); /* Lighter text for grayed out */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .level-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .level-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Specific gradients apply only when the button is active */
+        .level-1.active { background: linear-gradient(135deg, #ff006e, #8338ec); color: white; }
+        .level-2.active { background: linear-gradient(135deg, #8338ec, #3a86ff); color: white; }
+        .level-3.active { background: linear-gradient(135deg, #3a86ff, #06ffa5); color: white; }
+        .level-4.active { background: linear-gradient(135deg, #06ffa5, #ffbe0b); color: white; }
+
+        .level-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .level-btn.active {
+            transform: scale(1.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); }
+            50% { box-shadow: 0 25px 50px rgba(255, 0, 110, 0.3); }
+        }
+
+        .level-btn .progress-indicator {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #4caf50; /* Green for progress */
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* Small shadow for indicator */
+        }
+
+        /* Question Card */
+        .question-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 25px;
+            padding: 25px;
+            margin: 20px 0;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column; /* Changed to column for better layout with new elements */
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .question-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff006e, #8338ec, #3a86ff, #06ffa5);
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .question-number {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 0.9em;
+            opacity: 0.7;
+            font-weight: 300;
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5); /* Gray by default */
+            cursor: pointer;
+            font-size: 1.5em;
+            transition: all 0.3s ease;
+            padding: 5px; /* Add padding for easier clicking */
+        }
+
+        .favorite-btn:hover {
+            transform: scale(1.2);
+            text-shadow: 0 0 10px rgba(255,255,255,0.5); /* Glowing effect */
+        }
+
+        .favorite-btn.active {
+            color: #ff6b6b; /* Red when active */
+            transform: scale(1.1);
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            line-height: 1.5;
+            text-align: center;
+            font-weight: 400;
+            margin: 15px 0; /* Added margin for spacing */
+            padding: 0 15px; /* Added padding to prevent text from touching edges */
+        }
+
+        .note-indicator {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-weight: 300;
+        }
+
+        .note-indicator:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* General Button Styling */
+        .btn {
+            padding: 15px 25px; /* Default padding for smaller buttons like Add Note, Previous, Menu */
+            border: none;
+            border-radius: 50px;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: linear-gradient(45deg, #ff006e, #8338ec); /* Default button gradient */
+            color: white;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(255, 0, 110, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2); /* Lighter background for secondary buttons */
+            color: white;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+        }
+
+        .next-btn::after {
+            content: '→';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.3s ease;
+        }
+
+        .next-btn:hover::after {
+            transform: translateY(-50%) translateX(5px);
+        }
+
+        /* Progress Bar */
+        .progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff006e, #8338ec, #3a86ff);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: progressShine 2s ease-in-out infinite;
+        }
+
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .level-description {
+            font-size: 0.85em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+            font-weight: 400;
+            color: #06ffa5;
+        }
+
+        .start-screen {
+            text-align: center;
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+            line-height: 1.6;
+            font-size: 0.9em;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .instructions h3 {
+            margin-bottom: 15px;
+            color: #ff006e;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .instructions p {
+            margin-bottom: 8px;
+            font-weight: 300;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #06ffa5, #ffbe0b);
+            color: #000;
+            padding: 20px 40px;
+            font-size: 1.1em;
+            font-weight: 800;
+            margin-top: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(6, 255, 165, 0.3);
+        }
+
+        .emoji {
+            font-size: 1.5em;
+            margin: 0 5px;
+        }
+
+        /* Menu Button (Fixed to viewport bottom-left) */
+        .menu-btn.fixed-bottom-left {
+            position: fixed;
+            bottom: 20px;
+            left: 20px; /* Aligned with the left edge of the viewport */
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9em;
+            z-index: 101;
+            transition: background 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-btn.fixed-bottom-left:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Menu Dropdown (Fixed, positioned relative to the fixed menu button) */
+        .menu-dropdown {
+            position: fixed;
+            bottom: 70px; /* Adjust based on menu button height + desired gap */
+            left: 20px; /* Align with the fixed menu button */
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            border-radius: 10px;
+            padding: 10px 0;
+            display: none;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            z-index: 100;
+            min-width: 180px;
+            font-weight: 400;
+        }
+
+        .menu-dropdown.active {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-align: left;
+        }
+
+        .menu-item:hover {
+            background: rgba(0, 0, 0, 0.1); /* Light grey on hover */
+        }
+
+        /* Modals (Notes, Menus, Confirmation) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8); /* Dark overlay */
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex; /* Show when active */
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Modal content background */
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh; /* Limit height for scrollability */
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            color: white;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg); /* Rotate on hover for close button */
+        }
+
+        .note-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 1em;
+            resize: vertical; /* Allow vertical resizing */
+        }
+
+        .note-textarea:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.5); /* Highlight border on focus */
+        }
+
+        /* Question Grid for Navigation */
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); /* Responsive grid */
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .question-grid-item {
+            aspect-ratio: 1; /* Maintain square aspect ratio */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            color: white;
+        }
+
+        .question-grid-item:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .question-grid-item.completed {
+            background: rgba(6, 255, 165, 0.5); /* Green for completed */
+            color: #000; /* Dark text for green background */
+        }
+
+        .question-grid-item.current {
+            background: rgba(255, 255, 255, 0.3); /* Brighter for current question */
+            transform: scale(1.1);
+            border: 2px solid #ffbe0b; /* Stronger highlight for current */
+        }
+
+        .question-grid-item.has-note::after {
+            content: '📝'; /* Emoji indicator for notes */
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-size: 0.8em;
+        }
+
+        /* Stats Container */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: 800;
+            margin-bottom: 5px;
+            background: linear-gradient(45deg, #06ffa5, #ffbe0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2.2em;
+            }
+            
+            .level-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .level-btn {
+                padding: 15px;
+            }
+            .btn {
+                padding: 12px 25px;
+            }
+
+            /* Adjust button sizes for smaller screens */
+            .top-game-controls .btn {
+                padding: 12px 15px;
+                font-size: 0.8em;
+            }
+
+            .full-width-btn {
+                padding: 15px 25px;
+                font-size: 1em;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Specific style for liked questions list items */
+        .liked-question-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .liked-question-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .liked-question-item strong {
+            color: #ffbe0b; /* Highlight level/prompt numbers */
+        }
+
+        /* Main Game Controls (within game-container) */
+        .game-controls {
+            display: flex;
+            flex-direction: column; /* Stack the two rows of buttons */
+            gap: 15px; /* Gap between the top row and the full-width Next Vibe button */
+            margin-top: 25px; /* Space from the question card */
+            width: 100%; /* Take full width of game-container's padding area */
+            padding: 0 25px; /* Align with question-card's text content */
+        }
+
+        .top-game-controls {
+            display: flex;
+            justify-content: space-between; /* Distribute Prev and Add Note */
+            align-items: center;
+            width: 100%;
+        }
+
+        .top-game-controls .btn {
+            flex-grow: 1; /* Allow them to grow */
+            flex-basis: 0; /* Distribute space evenly */
+            margin: 0 5px; /* Small margin between them */
+        }
+
+        .full-width-btn {
+            width: 100%; /* Make Next Vibe button full width */
+            padding: 18px 35px; /* Larger padding for primary button */
+            font-size: 1.1em; /* Larger font */
+            position: relative; /* For the arrow icon */
+        }
+
+        /* LLM Response Modal */
+        .llm-response-modal-content {
+            background: linear-gradient(135deg, #764ba2 0%, #3a86ff 100%);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            color: white;
+            text-align: left;
+        }
+
+        .llm-response-modal-content h2 {
+            color: #06ffa5;
+            margin-bottom: 15px;
+        }
+
+        .llm-response-modal-content p {
+            font-size: 1em;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .loading-indicator {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #06ffa5;
+        }
+
+        .loading-indicator::after {
+            content: '...';
+            animation: dots 1s steps(3, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { color: rgba(0,0,0,0); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
+            40% { color: white; text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
+            60% { text-shadow: .25em 0 0 white, .5em 0 0 rgba(0,0,0,0); }
+            80%, 100% { text-shadow: .25em 0 0 white, .5em 0 0 white; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Start Screen -->
+        <div id="start-screen" class="start-screen">
+            <h1>Hearts Unveiled</h1>
+            <p class="subtitle"> deeper connections, no cap </p>
+            
+            <div class="instructions">
+                <h3> How to Slay This Game:</h3>
+                <p>• Pick your vibe level - start wherever feels right</p>
+                <p>• Level 4 = hands-on activities (find your safe space first!)</p>
+                <p>• Take turns with the prompts - no judgment zone</p>
+                <p>• Listen with your whole heart, answer with your truth</p>
+                <p>• Touch exercises = communicate the whole time, respect boundaries</p>
+                <p>• No wrong answers - just opportunities to connect deeper</p>
+                <p>• Your pace, your rules - skip anything that doesn't hit right</p>
+                <p>• Small moments > perfect answers - authenticity is everything</p>
+            </div>
+            
+            <button class="btn start-btn" onclick="startGame()">Let's Get Deep <span class="emoji"></span></button>
+            
+            <div id="resume-option" style="display: none; margin-top: 20px;">
+                <p style="margin-bottom: 10px; font-weight: 300;">Welcome back! You have saved progress.</p>
+                <button class="btn btn-secondary" onclick="resumeGame()">Continue Where You Left Off</button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" style="display: none;">
+            <h1>Hearts Unveiled</h1>
+            
+            <div class="level-grid">
+                <button class="level-btn level-1" onclick="selectLevel(1)"> Hearts
+                    <span class="progress-indicator" id="progress-1" style="display: none;">0</span>
+                </button>
+                <button class="level-btn level-2" onclick="selectLevel(2)"> Souls
+                    <span class="progress-indicator" id="progress-2" style="display: none;">0</span>
+                </button>
+                <button class="level-btn level-3" onclick="selectLevel(3)"> Bodies
+                    <span class="progress-indicator" id="progress-3" style="display: none;">0</span>
+                </button>
+                <button class="level-btn level-4" onclick="selectLevel(4)"> Touch
+                    <span class="progress-indicator" id="progress-4" style="display: none;">0</span>
+                </button>
+            </div>
+            
+            <div class="level-description" id="level-description"></div>
+            
+            <div class="progress">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="question-card" id="question-card">
+                <span class="question-number" id="question-number"></span>
+                <button class="favorite-btn" id="favorite-btn" onclick="toggleFavorite()">❤️</button>
+                <div class="question-text" id="question-text">
+                    Choose your vibe to start connecting 
+                </div>
+                <div class="note-indicator" id="note-indicator" onclick="openNotes()" style="display: none;">
+                    📝 View/Add Note
+                </div>
+            </div>
+            
+            <!-- Main game controls (excluding the fixed menu button) -->
+            <div class="game-controls">
+                <!-- This row will contain Previous and Add Note -->
+                <div class="top-game-controls">
+                    <button class="btn btn-secondary" onclick="previousQuestion()" id="prev-btn" style="display: none;">
+                        ← Previous
+                    </button>
+                    <button class="btn btn-secondary" onclick="openNotes()" id="notes-btn" style="display: none;">
+                        📝 Add Note
+                    </button>
+                    <button class="btn btn-secondary" onclick="deepDivePrompt()" id="deep-dive-btn" style="display: none;">
+                        ✨ Deep Dive
+                    </button>
+                </div>
+                <!-- This button will be full width -->
+                <button class="btn next-btn full-width-btn" onclick="nextQuestion()" id="next-btn" style="display: none;">
+                    Next Vibe →
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Screen -->
+        <div id="stats-screen" style="display: none;">
+            <h1>Your Journey Together</h1>
+            <div class="stats-container" id="stats-container"></div>
+            <button class="btn" onclick="backToGame()" style="margin-top: 20px;">Back to Prompts</button>
+        </div>
+
+        <!-- Question Grid Screen -->
+        <div id="grid-screen" style="display: none;">
+            <h1>Prompt Overview</h1>
+            <p class="subtitle" id="grid-level-title"></p>
+            <div class="question-grid" id="question-grid"></div>
+            <button class="btn" onclick="backToGame()" style="margin-top: 20px;">Back to Game</button>
+        </div>
+
+        <!-- Liked Questions Screen -->
+        <div id="favorites-screen" style="display: none;">
+            <h1>Your Liked Prompts</h1>
+            <p class="subtitle">Prompts that resonated with you ❤️</p>
+            <div id="liked-questions-list" style="margin-top: 20px;">
+                <!-- Liked questions will be populated here -->
+            </div>
+            <button class="btn" onclick="backToGame()" style="margin-top: 20px;">Back to Game</button>
+        </div>
+
+        <!-- Notes Modal -->
+        <div class="modal" id="notes-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Your Notes</h2>
+                    <button class="close-btn" onclick="closeNotes()">×</button>
+                </div>
+                <textarea class="note-textarea" id="note-textarea" placeholder="Spill the tea here..."></textarea>
+                <button class="btn" onclick="saveNote()" style="margin-top: 20px;">Save Note</button>
+            </div>
+        </div>
+
+        <!-- LLM Response Modal -->
+        <div class="modal" id="llm-response-modal">
+            <div class="llm-response-modal-content">
+                <div class="modal-header">
+                    <h2 id="llm-response-title">✨ Prompt Deep Dive ✨</h2>
+                    <button class="close-btn" onclick="closeLlmResponseModal()">×</button>
+                </div>
+                <div id="llm-response-text"></div>
+                <div class="loading-indicator" id="llm-loading-indicator">Generating insights</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fixed Menu Button (outside game-container) -->
+    <button class="menu-btn fixed-bottom-left" onclick="toggleMenu()">☰ Menu</button>
+    <!-- Menu Dropdown (Fixed, relative to the fixed menu button) -->
+    <div class="menu-dropdown" id="menu-dropdown">
+        <div class="menu-item" onclick="showStats()">📊 View Stats</div>
+        <div class="menu-item" onclick="showQuestionGrid()">📱 Prompt Grid</div>
+        <div class="menu-item" onclick="showFavorites()">❤️ View Liked Prompts</div>
+        <div class="menu-item" onclick="exportNotes()">📥 Export Notes</div>
+        <div class="menu-item" onclick="resetProgress()">🔄 Reset Progress</div>
+    </div>
+
+    <script>
+        const questions = {
+            1: [ // Hearts - Emotional Connection (Enhanced with Gottman Love Maps)
+                "What's one thing about me that makes you smile when you think about it?",
+                "What's my biggest dream right now, and how can you support it?", // Love Maps
+                "When did you first realize you had feelings for me?",
+                "What's your favorite memory of us together so far?",
+                "What's one thing you've always wanted to tell me but haven't?",
+                "What's my greatest fear, and how does it affect our relationship?", // Love Maps
+                "How do you feel most loved by me?",
+                "What's something you've learned about yourself since being with me?",
+                "What's one of your dreams that you'd like us to experience together?",
+                "What stresses me out the most, and how do you see me handle it?", // Love Maps
+                "When do you feel most connected to me?",
+                "What's something you admire about how I handle challenges?", // Fondness & Admiration
+                "How has our relationship changed you as a person?",
+                "What's my favorite way to spend a weekend, and why do you think that is?", // Love Maps
+                "What's something you're grateful for about our relationship?",
+                "What's one way I could better support your dreams?",
+                "What's something I did recently that made you feel appreciated?", // Fondness & Admiration
+                "What's your favorite thing about how we communicate?",
+                "What's my biggest goal for this year, and what obstacles might I face?", // Love Maps
+                "What's something you want us to work on together?",
+                "When I'm having a bad day, what's the best way for you to support me?", // Turning Towards
+                "How do you want to grow together in the next year?",
+                "What's one thing I do that makes you feel truly understood?", // Fondness & Admiration
+                "What's something about my past that you think shaped who I am today?" // Love Maps
+            ],
+            2: [ // Souls - Deep Intimacy (Enhanced with Gottman Conflict & Repair)
+                "What's your deepest fear about our relationship?",
+                "What's something you've never told anyone that you'd like to share with me?",
+                "When we disagree, what do you need from me to feel heard?", // Conflict Management
+                "What does true intimacy mean to you?",
+                "What's one thing about yourself that you're still discovering?",
+                "What's your biggest trigger in arguments, and where do you think it comes from?", // Conflict Management
+                "How do you want to be remembered by me?",
+                "What's something you need to feel completely safe with me?",
+                "After we have a disagreement, what helps you feel close to me again?", // Repair Attempts
+                "What's one way we could be more vulnerable with each other?",
+                "What's your biggest insecurity, and how can I help you with it?",
+                "What's something you've always wanted to try but been afraid to?",
+                "When you're upset with me, what's the best way for me to apologize?", // Repair Attempts
+                "How do you want our love to evolve over time?",
+                "What's something about your past that still affects you today?",
+                "What's one thing you need from me when you're struggling?",
+                "What's our biggest strength as a couple when facing challenges?", // Shared Meaning
+                "How do you want us to handle conflict in our relationship?",
+                "What's something you're proud of about how we love each other?",
+                "What values do we share that make our relationship strong?", // Shared Meaning
+                "What's one way we could deepen our spiritual connection?",
+                "What's something I do that helps you feel emotionally safe?", // Emotional Safety
+                "What's a tradition or ritual you'd like us to create together?", // Shared Meaning
+                "How do you want us to support each other's individual growth while staying connected?" // Shared Meaning
+            ],
+            3: [ // Bodies - Physical Intimacy
+                "What's something about physical intimacy that you've always wanted to explore?",
+                "How do you feel most desired by me?",
+                "What's your favorite way for us to show physical affection?",
+                "What's something new you'd like to try together?",
+                "How do you like to be touched when you need comfort?",
+                "What's something that makes you feel confident in your body?",
+                "What's one thing you love about our physical connection?",
+                "How can we create more intimacy in our daily lives?",
+                "What's something you find irresistible about me?",
+                "What's your favorite memory of our physical connection?",
+                "How do you want us to maintain our physical connection over time?",
+                "What's something you've been curious about but haven't brought up?",
+                "How do you like to initiate physical intimacy?",
+                "What's one way we could make our intimate moments more special?",
+                "What makes you feel most connected to me physically?"
+            ],
+            4: [ // Touch - Sensate Focus & Mindful Connection
+                "Let's practice mindful breathing together. Sit facing each other, close your eyes, and synchronize your breathing for 2 minutes. How does this feel?",
+                "Take turns placing your hand on each other's heart. Feel the heartbeat for 30 seconds. What do you notice about your partner's rhythm?",
+                "Practice the 'hand meditation': One person places their hand palm-up, the other traces their palm very slowly for 2 minutes. Focus only on the sensation. Switch roles.",
+                "Try 'back writing': One person writes a word or draws a shape on their partner's back with their finger. Can you guess what it is? How does the touch feel?",
+                "Do a 'body scan together': Lie side by side and verbally guide each other through relaxing each body part from head to toe. How connected do you feel?",
+                "Practice 'mirroring touch': One person touches their own arm, the other mirrors the exact touch on their partner's arm. Stay present with the sensation.",
+                "Try 'temperature awareness': Take turns placing warm and cool objects (like a warm mug or cool stone) on different parts of each other's hands. Describe the sensations.",
+                "Do 'pressure exploration': Take turns applying different pressures (light feather touch to firm massage) on each other's shoulders. What feels best?",
+                "Practice 'texture discovery': Use different fabrics or materials to touch each other's arms. Close your eyes and guess the material. How does each feel?",
+                "Try 'synchronized movement': Stand facing each other and slowly mirror each other's arm movements for 3 minutes. Stay connected through eye contact.",
+                "Do 'gratitude touch': Take turns touching a part of your partner's body and expressing gratitude for that part. How does it feel to give and receive this?",
+                "Practice 'breathing touch': One person places their hand on their partner's chest/back and matches their breathing rhythm through touch.",
+                "Try 'energy sensing': Hold your palms close to each other without touching. Can you feel warmth or energy? Slowly move closer and apart.",
+                "Do 'comfort mapping': Show your partner exactly how you like to be touched when you're stressed, sad, or need comfort. Practice giving this touch.",
+                "Practice 'present moment touch': Set a timer for 5 minutes. One person gives the other a very slow, mindful shoulder or foot massage focusing only on the present moment."
+            ]
+        };
+
+        const levelDescriptions = {
+            1: "Love Maps, fondness & admiration - building your emotional foundation ",
+            2: "Deep vulnerability, conflict skills, and creating shared meaning ",
+            3: "Physical connection and exploring desires together ",
+            4: "Sensate focus and mindful touch exercises for deeper connection "
+        };
+
+        // State management
+        let currentLevel = 1;
+        let currentQuestionIndex = 0;
+        let gameStarted = false;
+        let gameData = {
+            completedQuestions: { 1: [], 2: [], 3: [], 4: [] }, // Stores indices of completed questions per level
+            notes: {}, // Stores notes, keyed by "level-index"
+            favorites: [], // Stores favorited questions, keyed by "level-index"
+            lastPlayed: null, // Timestamp of last play
+            currentLevel: 1, // Last played level
+            currentQuestion: 0 // Last played question index
+        };
+
+        // --- Initialization and Storage ---
+
+        // Initialize app when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                loadProgress(); // Attempt to load saved data
+                // If there's saved progress, show the resume option
+                if (gameData.lastPlayed) {
+                    document.getElementById('resume-option').style.display = 'block';
+                }
+                // Update progress indicators on level buttons initially
+                updateProgressIndicators();
+            } catch (error) {
+                console.error("Error during app initialization:", error);
+                // Fallback to fresh start if loading fails
+                document.getElementById('resume-option').style.display = 'none';
+            }
+        });
+
+        // Saves current game state to local storage
+        function saveProgress() {
+            gameData.lastPlayed = new Date().toISOString(); // Update timestamp
+            gameData.currentLevel = currentLevel;
+            gameData.currentQuestion = currentQuestionIndex;
+            try {
+                localStorage.setItem('heartsUnveiled', JSON.stringify(gameData)); // Changed key
+                console.log("Game progress saved.");
+            } catch (error) {
+                console.error("Error saving progress to local storage:", error);
+            }
+            updateProgressIndicators(); // Update UI progress
+        }
+
+        // Loads game state from local storage
+        function loadProgress() {
+            try {
+                const saved = localStorage.getItem('heartsUnveiled'); // Changed key
+                if (saved) {
+                    gameData = JSON.parse(saved);
+                    console.log("Game progress loaded.", gameData);
+                }
+            } catch (error) {
+                console.error("Error loading progress from local storage:", error);
+                // Reset gameData if loading fails to prevent corrupted state
+                gameData = {
+                    completedQuestions: { 1: [], 2: [], 3: [], 4: [] },
+                    notes: {},
+                    favorites: [],
+                    lastPlayed: null,
+                    currentLevel: 1,
+                    currentQuestion: 0
+                };
+            }
+        }
+
+        // Resets all game progress and reloads the page
+        function resetProgress() {
+            // Use a custom modal or message box instead of confirm() for better UI consistency
+            showConfirmation("Are you sure you want to reset all progress? This will delete all your notes and completed questions.",
+                function() { // On confirmation
+                    localStorage.removeItem('heartsUnveiled'); // Clear data (changed key)
+                    gameData = { // Reset state variables
+                        completedQuestions: { 1: [], 2: [], 3: [], 4: [] },
+                        notes: {},
+                        favorites: [],
+                        lastPlayed: null,
+                        currentLevel: 1,
+                        currentQuestion: 0
+                    };
+                    location.reload(); // Reload the page to reset UI
+                },
+                function() { // On cancellation
+                    console.log("Reset cancelled.");
+                }
+            );
+        }
+
+        // Custom confirmation modal (replaces native confirm)
+        function showConfirmation(message, onConfirm, onCancel) {
+            const modal = document.createElement('div');
+            modal.className = 'modal active'; // Use existing modal styles
+
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Confirm Action</h2>
+                        <button class="close-btn" onclick="closeConfirmation()">×</button>
+                    </div>
+                    <p>${message}</p>
+                    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+                        <button class="btn btn-secondary" id="confirm-cancel-btn">Cancel</button>
+                        <button class="btn" id="confirm-ok-btn">Confirm</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            document.getElementById('confirm-ok-btn').onclick = function() {
+                onConfirm();
+                modal.remove(); // Remove modal after action
+            };
+            document.getElementById('confirm-cancel-btn').onclick = function() {
+                onCancel();
+                modal.remove(); // Remove modal after action
+            };
+            // Close button in header
+            modal.querySelector('.close-btn').onclick = function() {
+                onCancel();
+                modal.remove();
+            };
+
+            // Close on outside click
+            modal.onclick = function(event) {
+                if (event.target === modal) {
+                    onCancel();
+                    modal.remove();
+                }
+            };
+        }
+
+        // Function to close the confirmation modal if opened by the close button directly.
+        function closeConfirmation() {
+            const modal = document.querySelector('.modal.active');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // --- Game Navigation and Display ---
+
+        // Shows the game screen and hides the start screen
+        function startGame() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            gameStarted = true;
+            selectLevel(currentLevel); // Ensure a level is selected and question shown
+            updateProgressIndicators();
+        }
+
+        // Resumes the game from the last saved point
+        function resumeGame() {
+            startGame(); // Transition to game screen
+            currentLevel = gameData.currentLevel; // Set to last played level
+            currentQuestionIndex = gameData.currentQuestion; // Set to last played question
+            selectLevel(currentLevel); // Load the level and display the question
+        }
+
+        // Selects a new level and sets question index (resumes if coming back to a level)
+        function selectLevel(level) {
+            currentLevel = level;
+            // If the game has started and we're switching levels, try to resume saved progress for that level
+            // Otherwise, start from the beginning of the selected level
+            currentQuestionIndex = gameData.completedQuestions[currentLevel].length > 0 ? gameData.completedQuestions[currentLevel][gameData.completedQuestions[currentLevel].length - 1] + 1 : 0;
+            // If the resumed index is beyond the questions length, reset to 0
+            if (currentQuestionIndex >= questions[currentLevel].length) {
+                currentQuestionIndex = 0;
+            }
+
+            // Update active state for level buttons
+            document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.level-${level}`).classList.add('active');
+            
+            // Update description
+            document.getElementById('level-description').innerHTML = levelDescriptions[level];
+            
+            showQuestion(); // Display the current question for the selected level
+            
+            // Show/hide navigation buttons based on game state
+            document.getElementById('next-btn').style.display = 'block';
+            document.getElementById('notes-btn').style.display = 'block';
+            document.getElementById('prev-btn').style.display = currentQuestionIndex > 0 ? 'block' : 'none';
+            document.getElementById('deep-dive-btn').style.display = 'block'; // Show the new deep dive button
+        }
+
+        // Displays the current question and updates UI elements
+        function showQuestion() {
+            const currentQuestionsList = questions[currentLevel];
+            if (!currentQuestionsList || currentQuestionIndex >= currentQuestionsList.length || currentQuestionIndex < 0) {
+                showLevelComplete(); // Handle end of level or invalid index
+                return;
+            }
+
+            const questionText = currentQuestionsList[currentQuestionIndex];
+            document.getElementById('question-text').textContent = questionText;
+            document.getElementById('question-number').textContent = `Prompt ${currentQuestionIndex + 1} of ${currentQuestionsList.length}`;
+            
+            const questionId = `${currentLevel}-${currentQuestionIndex}`;
+            
+            // Update favorite button state
+            const favoriteBtn = document.getElementById('favorite-btn');
+            favoriteBtn.classList.toggle('active', gameData.favorites.includes(questionId));
+            favoriteBtn.style.display = 'block'; // Ensure favorite button is visible when question is shown
+
+            // Update note indicator state
+            const noteIndicator = document.getElementById('note-indicator');
+            if (gameData.notes[questionId]) {
+                noteIndicator.style.display = 'block';
+            } else {
+                noteIndicator.style.display = 'none';
+            }
+            
+            // Ensure notes and navigation buttons are visible
+            document.getElementById('notes-btn').style.display = 'block';
+            document.getElementById('next-btn').style.display = 'block';
+            document.getElementById('prev-btn').style.display = currentQuestionIndex > 0 ? 'block' : 'none';
+            document.getElementById('deep-dive-btn').style.display = 'block'; // Show the new deep dive button
+
+            updateProgress(); // Update progress bar
+            saveProgress(); // Save current state
+            
+            // Add fade-in animation for question card
+            document.getElementById('question-card').classList.add('fade-in');
+            setTimeout(() => {
+                document.getElementById('question-card').classList.remove('fade-in');
+            }, 500);
+        }
+
+        // Moves to the next question
+        function nextQuestion() {
+            // Mark current question as completed (if not already)
+            if (!gameData.completedQuestions[currentLevel].includes(currentQuestionIndex)) {
+                gameData.completedQuestions[currentLevel].push(currentQuestionIndex);
+                gameData.completedQuestions[currentLevel].sort((a,b) => a-b); // Keep sorted for consistency
+            }
+            
+            currentQuestionIndex++;
+            
+            if (currentQuestionIndex >= questions[currentLevel].length) {
+                showLevelComplete(); // All questions in this level answered
+            } else {
+                showQuestion(); // Show next question
+                document.getElementById('prev-btn').style.display = 'block'; // Always show previous button if not at the start
+            }
+        }
+
+        // Moves to the previous question
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion(); // Show previous question
+                if (currentQuestionIndex === 0) {
+                    document.getElementById('prev-btn').style.display = 'none'; // Hide if at the very first question of the level
+                }
+            }
+        }
+
+        // Displays the level complete message
+        function showLevelComplete() {
+            document.getElementById('question-text').innerHTML = `
+                <div>
+                    <h3>Level ${currentLevel} Complete! </h3>
+                    <p>You've explored ${questions[currentLevel].length} prompts together - that's some real connection energy!</p>
+                    <p>Choose another level to keep the vibes going, or take time to process what you've shared </p>
+                </div>`;
+            // Hide navigation and question-specific controls
+            document.getElementById('next-btn').style.display = 'none';
+            document.getElementById('notes-btn').style.display = 'none';
+            document.getElementById('favorite-btn').style.display = 'none';
+            document.getElementById('question-number').style.display = 'none';
+            document.getElementById('note-indicator').style.display = 'none';
+            document.getElementById('deep-dive-btn').style.display = 'none'; // Hide deep dive button
+            
+            updateProgressIndicators(); // Update progress on level buttons
+        }
+
+        // Updates the main progress bar
+        function updateProgress() {
+            const progress = (currentQuestionIndex / questions[currentLevel].length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        }
+
+        // Updates the small progress indicators on level buttons
+        function updateProgressIndicators() {
+            for (let level = 1; level <= 4; level++) { // Loop through 4 levels
+                const completed = gameData.completedQuestions[level] ? gameData.completedQuestions[level].length : 0;
+                const indicator = document.getElementById(`progress-${level}`);
+                if (indicator) { // Check if indicator exists (for new level 4)
+                    if (completed > 0) {
+                        indicator.textContent = completed;
+                        indicator.style.display = 'block';
+                    } else {
+                        indicator.style.display = 'none';
+                    }
+                }
+            }
+        }
+
+        // --- Notes Functionality ---
+
+        // Opens the notes modal for the current question
+        function openNotes() {
+            const questionId = `${currentLevel}-${currentQuestionIndex}`;
+            const existingNote = gameData.notes[questionId] || '';
+            document.getElementById('note-textarea').value = existingNote;
+            document.getElementById('notes-modal').classList.add('active');
+        }
+
+        // Closes the notes modal
+        function closeNotes() {
+            document.getElementById('notes-modal').classList.remove('active');
+        }
+
+        // Saves the note for the current question
+        function saveNote() {
+            const questionId = `${currentLevel}-${currentQuestionIndex}`;
+            const noteText = document.getElementById('note-textarea').value.trim();
+            
+            if (noteText) {
+                gameData.notes[questionId] = noteText;
+                document.getElementById('note-indicator').style.display = 'block'; // Show indicator if note exists
+            } else {
+                delete gameData.notes[questionId]; // Remove note if empty
+                document.getElementById('note-indicator').style.display = 'none'; // Hide indicator if no note
+            }
+            
+            saveProgress(); // Save changes to notes
+            closeNotes();
+        }
+
+        // Exports all notes to a text file
+        function exportNotes() {
+            toggleMenu(); // Close menu
+            let exportText = "Hearts Unveiled - Your Journey Notes\n\n";
+            let hasNotes = false;
+
+            for (const levelKey in questions) {
+                const level = parseInt(levelKey);
+                exportText += `--- Level ${level}: ${levelDescriptions[level]} ---\n\n`;
+                questions[level].forEach((qText, index) => {
+                    const questionId = `${level}-${index}`;
+                    if (gameData.notes[questionId]) {
+                        exportText += `Prompt ${index + 1}: ${qText}\n`;
+                        exportText += `Note: ${gameData.notes[questionId]}\n\n`;
+                        hasNotes = true;
+                    }
+                });
+                exportText += "--------------------------------------\n\n";
+            }
+
+            if (!hasNotes) {
+                exportText = "No notes saved yet. Start your journey and add some!\n";
+            }
+
+            const blob = new Blob([exportText], { type: 'text/plain;charset=utf-8' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'Hearts_Unveiled_Notes.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(a.href); // Clean up URL object
+        }
+
+
+        // --- Favorites Functionality ---
+
+        // Toggles the favorite status of the current question
+        function toggleFavorite() {
+            const questionId = `${currentLevel}-${currentQuestionIndex}`;
+            const index = gameData.favorites.indexOf(questionId);
+
+            if (index > -1) {
+                gameData.favorites.splice(index, 1); // Remove from favorites
+                document.getElementById('favorite-btn').classList.remove('active');
+            } else {
+                gameData.favorites.push(questionId); // Add to favorites
+                document.getElementById('favorite-btn').classList.add('active');
+            }
+            
+            saveProgress(); // Save changes to favorites
+        }
+
+        // Displays the liked questions screen
+        function showFavorites() {
+            toggleMenu(); // Close the menu
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('grid-screen').style.display = 'none';
+            document.getElementById('stats-screen').style.display = 'none';
+            document.getElementById('favorites-screen').style.display = 'block'; // Show favorites screen
+
+            const likedQuestionsList = document.getElementById('liked-questions-list');
+            likedQuestionsList.innerHTML = ''; // Clear previous list
+
+            if (gameData.favorites.length === 0) {
+                likedQuestionsList.innerHTML = '<p style="text-align: center; opacity: 0.7; margin-top: 30px;">You haven\'t liked any prompts yet. Tap the ❤️ on a prompt to save it!</p>';
+                return;
+            }
+
+            // Sort favorites by level and then by question index for better readability
+            const sortedFavorites = [...gameData.favorites].sort((a, b) => {
+                const [levelA, indexA] = a.split('-').map(Number);
+                const [levelB, indexB] = b.split('-').map(Number);
+                if (levelA !== levelB) {
+                    return levelA - levelB;
+                }
+                return indexA - indexB;
+            });
+
+            sortedFavorites.forEach(questionId => {
+                const [level, index] = questionId.split('-').map(Number);
+                const questionText = questions[level][index];
+
+                const item = document.createElement('div');
+                item.className = 'liked-question-item';
+                item.innerHTML = `<strong>Level ${level}, Prompt ${index + 1}:</strong> ${questionText}`;
+                
+                item.onclick = () => {
+                    currentLevel = level;
+                    currentQuestionIndex = index;
+                    backToGame(); // Navigate back to the game screen and show this specific question
+                };
+                likedQuestionsList.appendChild(item);
+            });
+        }
+
+
+        // --- Menu Functionality ---
+
+        // Toggles the visibility of the main menu dropdown
+        function toggleMenu() {
+            const menu = document.getElementById('menu-dropdown');
+            menu.classList.toggle('active');
+        }
+
+        // Displays the stats screen
+        function showStats() {
+            toggleMenu(); // Close the menu
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('grid-screen').style.display = 'none';
+            document.getElementById('favorites-screen').style.display = 'none'; // Hide favorites screen
+            document.getElementById('stats-screen').style.display = 'block'; // Show stats screen
+            
+            let totalCompleted = 0;
+            let totalNotes = 0;
+            let totalQuestions = 0;
+            
+            // Calculate total completed questions across all levels
+            for (let level = 1; level <= 4; level++) {
+                totalCompleted += gameData.completedQuestions[level] ? gameData.completedQuestions[level].length : 0;
+                totalQuestions += questions[level] ? questions[level].length : 0;
+            }
+            
+            // Count total notes
+            totalNotes = Object.keys(gameData.notes).length;
+            
+            // Generate HTML for stats cards
+            const statsHTML = `
+                <div class="stat-card">
+                    <div class="stat-number">${totalCompleted}</div>
+                    <div class="stat-label">Prompts Explored</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${totalNotes}</div>
+                    <div class="stat-label">Notes Written</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${gameData.favorites.length}</div>
+                    <div class="stat-label">Favorite Prompts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${totalQuestions > 0 ? Math.round((totalCompleted / totalQuestions) * 100) : 0}%</div>
+                    <div class="stat-label">Overall Journey Progress</div>
+                </div>
+            `;
+            
+            document.getElementById('stats-container').innerHTML = statsHTML;
+        }
+
+        // Displays the question grid screen
+        function showQuestionGrid() {
+            toggleMenu(); // Close the menu
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('stats-screen').style.display = 'none';
+            document.getElementById('favorites-screen').style.display = 'none'; // Hide favorites screen
+            document.getElementById('grid-screen').style.display = 'block'; // Show grid screen
+
+            document.getElementById('grid-level-title').textContent = `Level ${currentLevel}: ${levelDescriptions[currentLevel]}`;
+            
+            const grid = document.getElementById('question-grid');
+            grid.innerHTML = ''; // Clear previous grid items
+            
+            // Populate the grid with question numbers
+            const currentQuestionsList = questions[currentLevel];
+            if (currentQuestionsList) {
+                for (let i = 0; i < currentQuestionsList.length; i++) {
+                    const item = document.createElement('div');
+                    item.className = 'question-grid-item';
+                    item.textContent = i + 1; // Display question number (1-indexed)
+                    
+                    // Add classes based on completion, current status, and notes
+                    if (gameData.completedQuestions[currentLevel] && gameData.completedQuestions[currentLevel].includes(i)) {
+                        item.classList.add('completed');
+                    }
+                    
+                    if (i === currentQuestionIndex) {
+                        item.classList.add('current');
+                    }
+                    
+                    if (gameData.notes[`${currentLevel}-${i}`]) {
+                        item.classList.add('has-note');
+                    }
+
+                    // Click handler to jump to selected question
+                    item.onclick = () => {
+                        currentLevel = i; // Set selected question as current
+                        backToGame(); // Go back to game screen, which will then call showQuestion() with the updated index
+                    };
+                    grid.appendChild(item);
+                }
+            }
+        }
+
+        // Navigates back to the main game screen from stats, grid, or favorites
+        function backToGame() {
+            document.getElementById('stats-screen').style.display = 'none';
+            document.getElementById('grid-screen').style.display = 'none';
+            document.getElementById('favorites-screen').style.display = 'none'; // Hide favorites screen
+            document.getElementById('start-screen').style.display = 'none'; // Ensure start screen is hidden
+            document.getElementById('game-screen').style.display = 'block'; // Show game screen
+            showQuestion(); // Re-display the current question
+        }
+
+        // --- Gemini API Integration ---
+
+        // Function to call the Gemini API for prompt expansion
+        async function deepDivePrompt() {
+            const currentQuestionText = document.getElementById('question-text').textContent;
+            const llmResponseTextDiv = document.getElementById('llm-response-text');
+            const loadingIndicator = document.getElementById('llm-loading-indicator');
+
+            // Clear previous response and show loading indicator
+            llmResponseTextDiv.innerHTML = '';
+            loadingIndicator.style.display = 'block';
+            openLlmResponseModal();
+
+            try {
+                // Make the request to your backend server
+                const response = await fetch('/api/deep-dive', { // This is the new endpoint on your server
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ promptText: currentQuestionText }) // Send the prompt text to your server
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                const text = result.insight; // Your server sends the insight in a property called 'insight'
+
+                // Format the text for better readability:
+                // 1. Split by double newlines to create paragraphs.
+                // 2. Replace single newlines within paragraphs with <br> for line breaks.
+                const formattedText = text.split('\n\n')
+                                          .map(paragraph => `<p>${paragraph.replace(/\n/g, '<br>')}</p>`)
+                                          .join('');
+                llmResponseTextDiv.innerHTML = formattedText;
+
+            } catch (error) {
+                console.error("Error calling Deep Dive API:", error);
+                llmResponseTextDiv.innerHTML = `<p>Failed to connect with the vibe check: ${error.message}. Check your server console for more details!</p>`;
+            } finally {
+                loadingIndicator.style.display = 'none';
+            }
+        }
+
+        // Opens the LLM response modal
+        function openLlmResponseModal() {
+            document.getElementById('llm-response-modal').classList.add('active');
+        }
+
+        // Closes the LLM response modal
+        function closeLlmResponseModal() {
+            document.getElementById('llm-response-modal').classList.remove('active');
+            document.getElementById('llm-response-text').innerHTML = ''; // Clear content on close
+        }
+
+    </script>
+</body>
+</html>
