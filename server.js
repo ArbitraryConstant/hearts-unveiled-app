@@ -24,7 +24,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 // Configure CORS to allow requests from your Netlify frontend domain
 const corsOptions = {
-    origin: 'https://heartsunveiled.netlify.app/', // REPLACE WITH YOUR ACTUAL NETLIFY URL
+    origin: 'https://heartsunveiled.netlify.app', // REPLACE WITH YOUR ACTUAL NETLIFY URL
     optionsSuccessStatus: 200 // For legacy browser support
 };
 app.use(cors(corsOptions)); // Add this line
